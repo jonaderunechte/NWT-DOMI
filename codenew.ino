@@ -1,9 +1,9 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
-
+//WIR MÜSSEN NOCH AMPERE AUSRECHNEN-> DISCO FIX mit formel i=u/r (fester wiederstand einbauen, strom messen und berechnen)
 int val = 0;  
-int button = 2;  // Pin for the first button
+int button = 2;  // Pin for the firsact button
 int button1 = 3; // Pin for the second button
 int red = 4;
 int yellow = 6;
@@ -115,4 +115,3 @@ void loop() {
     }
    }
    }
- 
