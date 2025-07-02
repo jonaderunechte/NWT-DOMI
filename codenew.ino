@@ -11,57 +11,9 @@ int green = 5;
 int motor = 10;
 int strom = 0;
 
-int buttonout = LOW;
-int button1out = LOW;
-
 volatile bool buttonPressed = false;
 volatile bool button1Pressed = false;
 
-byte Battery_empty[] = {
-  B01110,
-  B11011,
-  B10001,
-  B10001,
-  B10001,
-  B10001,
-  B11111,
-  B00000
-};
-
-byte  Battery_low[] = {
-  B01110,
-  B11011,
-  B10001,
-  B10001,
-  B10001,
-  B11111,
-  B11111,
-  B00000
-};
-
-byte Battery_mid[] = {
-  B01110,
-  B11011,
-  B10001,
-  B11111,
-  B11111,
-  B11111,
-  B11111,
-  B00000
-};
-
-byte Battery_full[] = {
-  B01110,
-  B11111,
-  B11111,
-  B11111,
-  B11111,
-  B11111,
-  B11111,
-  B00000
-};
-
-// Interrupt service routines
 void buttonPressISR() {
   buttonPressed = !buttonPressed;
 }
@@ -71,34 +23,25 @@ void button1PressISR() {
 }
 
 void setup() {
-  Serial.begin(9600);           // Setup serial communication
-  pinMode(A0, INPUT);           // Analog input for strom
-  pinMode(button, INPUT_PULLUP);  // Set button pin as input with pull-up
-  pinMode(button1, INPUT_PULLUP); // Set button1 pin as input with pull-up
+  Serial.begin(9600);          
+  pinMode(A0, INPUT);           
+  pinMode(button, INPUT_PULLUP);  
+  pinMode(button1, INPUT_PULLUP);
   lcd.init();
-  lcd.backlight(); // Turn on the backlight
-  lcd.createChar(0, Battery_full);
-  lcd.createChar(1, Battery_mid);
-  lcd.createChar(2, Battery_low);
-  lcd.createChar(3, Battery_empty);
+  lcd.backlight(); 
 
-  lcd.home();
-  lcd.write(0);
-  pinMode(red, OUTPUT);  // LED pin as output
-  pinMode(yellow, OUTPUT);  // LED pin as output
-  pinMode(green, OUTPUT);  // LED pin as output
-  pinMode(motor, OUTPUT);  // Motor pin as output
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(motor, OUTPUT); 
 
   attachInterrupt(digitalPinToInterrupt(button), buttonPressISR, FALLING);
   attachInterrupt(digitalPinToInterrupt(button1), button1PressISR, FALLING);
-  lcd.setCursor(6, 1);
-  lcd.write(3);
 }
 
 void loop() {
-  val = analogRead(A0);  // Read the input pin
+  val = analogRead(A0);
   strom = map(val, 0, 1023, 0, 500);
-  //Serial.println(val);
   Serial.println(strom * 2);
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -106,113 +49,70 @@ void loop() {
   lcd.print("0");
   lcd.print("mV");
   delay(200);
-  lcd.setCursor(6, 1);
-  lcd.write(3);
-  
   //stufe eins
   if (strom * 2 <= 100) {
-    lcd.setCursor(6, 1);
-    lcd.write(0);
-    digitalWrite(red, LOW);    // Turn off green LED
+    digitalWrite(red, LOW);
     digitalWrite(yellow, LOW);
-    digitalWrite(green, LOW);    // Turn off green LED
-    digitalWrite(motor, LOW);    // Stop motor
-    // No action needed for this range
+    digitalWrite(green, LOW);
+    digitalWrite(motor, LOW);
   }
 
   //stufe zwei
   else if (strom * 2 >= 101 && strom * 2 <= 300) {
-    lcd.setCursor(6, 1);
-    lcd.write(1);
     if (buttonPressed == true) {
-      //delay(50);
-      digitalWrite(red, HIGH);     // Turn on red LED
-      digitalWrite(green, LOW);    // Turn off green LED
+      digitalWrite(red, HIGH);  
+      digitalWrite(green, LOW);
       digitalWrite(yellow, LOW);
-      digitalWrite(motor, LOW);    // Stop motor
+      digitalWrite(motor, LOW);
     } else {
-      //delay(50);
-      digitalWrite(red, LOW);      // Turn off red LED
-      digitalWrite(green, LOW);    // Turn off green LED
+      digitalWrite(red, LOW); 
+      digitalWrite(green, LOW);
       digitalWrite(yellow, LOW);
-      digitalWrite(motor, LOW);    // Stop motor
+      digitalWrite(motor, LOW);
     }
   }
 
  //stufe drei
   else if (strom * 2 >= 301 && strom * 2 <= 500) {
-    lcd.setCursor(6, 1);
-    lcd.write(3);
     if (buttonPressed == true) {
       //delay(50);
       digitalWrite(green, LOW);
       digitalWrite(red, LOW);
       digitalWrite(yellow, HIGH);
-      lcd.setCursor(6, 1);
-      lcd.write(3);
     } else{
         //delay(50);
-        digitalWrite(green, LOW);    // Turn off green LED
-        digitalWrite(red, LOW);    // Turn off green LED
-        digitalWrite(yellow, LOW);    // Turn off green LED
-        digitalWrite(motor, LOW);   // Start motor
+        digitalWrite(green, LOW); 
+        digitalWrite(red, LOW);    
+        digitalWrite(yellow, LOW);  
+        digitalWrite(motor, LOW);
       }
     
      if (strom * 2 >= 301 && strom * 2 <= 500) {
-      //delay(50);
       if (button1Pressed == true) {
-        digitalWrite(green, LOW);   // Turn on green LED
-        digitalWrite(motor, HIGH);   // Start motor
-        digitalWrite(red, LOW);    // Turn off green LED
+        digitalWrite(green, LOW);  
+        digitalWrite(motor, HIGH);  
+        digitalWrite(red, LOW); 
       } else {
-        //delay(50);
-        digitalWrite(green, LOW);    // Turn off green LED
-        digitalWrite(red, LOW);    // Turn off green LED
-        digitalWrite(yellow, LOW);    // Turn off green LED
-        digitalWrite(motor, LOW);   // Start motor
+        digitalWrite(green, LOW);   
+        digitalWrite(red, LOW);    
+        digitalWrite(yellow, LOW);
+        digitalWrite(motor, LOW); 
       }
     }
   }
 
    else if (strom * 2 >= 501) {
-    lcd.setCursor(6, 1);                                                                         
-    lcd.write(1);
     if (buttonPressed == true) {
-      //delay(50);
-      digitalWrite(red, LOW);     // Turn on red LED
-      digitalWrite(green, HIGH);    // Turn off green LED
+      digitalWrite(red, LOW);     
+      digitalWrite(green, HIGH);   
       digitalWrite(yellow, LOW);
-      digitalWrite(motor, HIGH);    // Stop motor
+      digitalWrite(motor, HIGH);  
     } else {    //delay(50);
-      digitalWrite(red, LOW);      // Turn off red LED
-      digitalWrite(green, LOW);    // Turn off green LED
+      digitalWrite(red, LOW);   
+      digitalWrite(green, LOW); 
       digitalWrite(yellow, LOW);
-      digitalWrite(motor, LOW);    // Stop motor
+      digitalWrite(motor, LOW);  
     }
    }
    }
-  /*else if (strom * 2 >= 201 && strom * 2 <= 400) {
-    lcd.setCursor(6, 1);
-    lcd.write(2);
-    if (buttonPressed) {
-      digitalWrite(yellow, HIGH);  // Turn on yellow LED
-      digitalWrite(red, LOW);    // Turn off green LED
-      digitalWrite(green, LOW);
-      digitalWrite(motor, LOW);    // Stop motor
-      //delay(50);
-    } else {
-      digitalWrite(yellow, LOW);   // Turn off yellow LED
-      digitalWrite(red, LOW);    // Turn off green LED
-      digitalWrite(green, LOW);
-      digitalWrite(motor, LOW);    // Stop motor
-      // delay(50);
-    }
-  }
-  else {
-    //delay(50);
-    digitalWrite(green, LOW);    // Turn off green LED
-    digitalWrite(motor, LOW);    // Stop motor
-    digitalWrite(red, LOW);    // Turn off green LED
-    digitalWrite(yellow, LOW);    // Turn off green LED
-  }
-}*/
+ 
