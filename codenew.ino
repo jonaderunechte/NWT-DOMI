@@ -1,30 +1,31 @@
 #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+#include <LiquidCrystal_I2C.h> // LCD-Display Bibliotheken
+LiquidCrystal_I2C lcd(0x27, 20, 4); //Formatierung LCD-Display
 //WIR MÜSSEN NOCH AMPERE AUSRECHNEN-> DISCO FIX mit formel i=u/r (fester wiederstand einbauen, strom messen und berechnen)
-int val = 0;  
+int val = 0;  //Wert von val auf 0 gesetzt
 int button = 2;  // Pin for the firsact button
 int button1 = 3; // Pin for the second button
-int red = 4;
-int yellow = 6;
-int green = 5;
-int motor = 10;
-int strom = 0;
+int red = 4; //Pin für die rote LED
+int yellow = 6; //Pin für die gelbe LED
+int green = 5; //Pin für die grüne LED
+int motor = 10; //Pin für den Motor
+int stromtest = 7; //TESTTTTT
+int strom = 0; //Wert von strom auf 0 gesetzt
 
-volatile bool buttonPressed = false;
-volatile bool button1Pressed = false;
+volatile bool buttonPressed = false; //Anfangsstatus von Button auf falsch gesetzt
+volatile bool button1Pressed = false; //Anfangsstatus von Button1 auf falsch gesetzt
 
 void buttonPressISR() {
-  buttonPressed = !buttonPressed;
+  buttonPressed = !buttonPressed; //Interrupt, um den Button-Status zu verändern
 }
 
 void button1PressISR() {
-  button1Pressed = !button1Pressed;
+  button1Pressed = !button1Pressed; //Interrupt, um den Button1-Status zu verändern
 }
 
-void setup() {
-  Serial.begin(9600);          
-  pinMode(A0, INPUT);           
+void setup() { 
+ // Serial.begin(9600);          
+  pinMode(A0, INPUT); // Pin A0 als Eingang (zum Messen der Spannung) gesetzt        
   pinMode(button, INPUT_PULLUP);  
   pinMode(button1, INPUT_PULLUP);
   lcd.init();
@@ -45,7 +46,7 @@ void loop() {
   Serial.println(strom * 2);
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print(val);
+  lcd.print(strom*2);
   lcd.print("0");
   lcd.print("mV");
   delay(200);
