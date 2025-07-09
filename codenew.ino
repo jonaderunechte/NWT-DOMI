@@ -40,13 +40,13 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(stromtest, HIGH);
+  digitalWrite(stromtest, LOW);
   val = analogRead(A0);
   strom = map(val, 0, 1023, 0, 5000);
   strom = strom / 12;
   Serial.println(strom);
   delay(20);
-  digitalWrite(stromtest, LOW);
+  digitalWrite(stromtest, HIGH);
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(strom);
