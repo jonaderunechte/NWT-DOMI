@@ -40,20 +40,20 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(stromtest, LOW);
+  digitalWrite(stromtest, HIGH);
   val = analogRead(A0);
   strom = map(val, 0, 1023, 0, 5000);
   strom = strom / 12;
   Serial.println(strom);
-  delay(20);
-  digitalWrite(stromtest, HIGH);
-  lcd.clear();
+    lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(strom);
   lcd.print("mA");
+  delay(20);
+  digitalWrite(stromtest, LOW);
   delay(200);
   //stufe eins
-  if (strom <= 100) {
+  if (strom <= 10) {
     digitalWrite(red, LOW);
     digitalWrite(yellow, LOW);
     digitalWrite(green, LOW);
@@ -61,7 +61,7 @@ void loop() {
   }
 
   //stufe zwei
-  else if (strom >= 101 && strom <= 300) {
+  else if (strom >= 10 && strom <= 20) {
     if (buttonPressed == true) {
       digitalWrite(red, HIGH);  
       digitalWrite(green, LOW);
@@ -76,7 +76,7 @@ void loop() {
   }
 
  //stufe drei
-  else if (strom >= 301 && strom <= 500) {
+  else if (strom >= 20 && strom <= 22) {
     if (buttonPressed == true) {
       //delay(50);
       digitalWrite(green, LOW);
@@ -90,7 +90,7 @@ void loop() {
         digitalWrite(motor, LOW);
       }
     
-     if (strom >= 301 && strom <= 500) {
+     if (strom >= 20 && strom <= 22) {
       if (button1Pressed == true) {
         digitalWrite(green, LOW);  
         digitalWrite(motor, HIGH);  
@@ -104,7 +104,7 @@ void loop() {
     }
   }
 
-   else if (strom >= 501) {
+   else if (strom >= 22) {
     if (buttonPressed == true) {
       digitalWrite(red, LOW);     
       digitalWrite(green, HIGH);   
