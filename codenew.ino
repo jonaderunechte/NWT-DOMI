@@ -49,7 +49,7 @@ void loop() {
   lcd.setCursor(0, 0);
   lcd.print(strom);
   lcd.print("mA");
-  delay(20);
+  delay(100);
   digitalWrite(stromtest, LOW);
   delay(200);
   //stufe eins
